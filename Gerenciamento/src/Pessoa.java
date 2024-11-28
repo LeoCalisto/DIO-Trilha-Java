@@ -14,6 +14,9 @@ public class Pessoa {
     public void setId(int id) {
         this.id = id;
     }
-
     
+    @Override
+    public String toString() {
+        return "Pessoa [nome=" + nome + ", id=" + id + "]";
+    }
 }

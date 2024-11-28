@@ -56,4 +56,11 @@ public class Evento {
     public void setVagas(int vagas) {
         this.vagas = vagas;
     }
+
+    @Override
+    public String toString() {
+        return "Evento [descicao=" + descicao + ", id=" + id + ", tipoEvento=" + tipoEvento + ", adm=" + adm
+                + ", participantes=" + participantes + ", vagas=" + vagas + "]";
+    }
+
 }
