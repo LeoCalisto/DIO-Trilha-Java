@@ -2,47 +2,22 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Dados {
+public class Dados extends ADados{
 
-
-    private Administrador adm = new Administrador();
-    private int qtalunos = 0;
-    private Set<Aluno> alunos = new HashSet<>();
-    private Set<Evento> eventos = new HashSet<>();
-
-    public Administrador getAdm() {
-        return adm;
+    public void obterAlunos(){
+        for (Aluno a:getAlunosGeral()){
+            System.out.println(a);
+        }
     }
 
-    public void setAdm(Administrador adm) {
-        this.adm = adm;
+    public void obterEventos(){
+        for (Evento e:getEventos()){
+            System.out.println(e);
+        }
     }
 
-    public int getQtalunos() {
-        return qtalunos;
-    }
-
-    public void setQtalunos(int qtalunos) {
-        this.qtalunos = qtalunos;
-    }
-
-    public Set<Aluno> getAlunosGeral() {
-        return alunos;
-    }
-
-    public void setAlunos(Set<Aluno> alunos) {
-        this.alunos = alunos;
-    }
-
-    public Set<Evento> getEventos() {
-        return eventos;
-    }
-
-    public void setEventos(Set<Evento> eventos) {
-        this.eventos = eventos;
-    }
-
-    public void criarEvento(Set<Evento> eventos, Administrador adm, int qtalunos){
+    @Override
+    public Evento criarEvento(){
         Scanner sc = new Scanner(System.in);
         String descicao;
         int id, opc;
@@ -53,7 +28,7 @@ public class Dados {
 
         System.out.println("Digite a descição do Evento: ");
         descicao = sc.nextLine();
-        id = eventos.size()+1;
+        id = getQtEventos()+1;
         System.out.println("Tipo do evento: 1-Palestra 2-Workshop 3-Seminário 4-Minicurso 5-Competição");
         opc = sc.nextInt();
         switch (opc) {
@@ -76,17 +51,18 @@ public class Dados {
                 System.out.println("Tipo de não existente !");
                 break;
         }
-        if (adm.getId() != 1) {
+        
+        if (getAdm().getId() != 1) {
             System.out.println("Digite o nome do ADM: ");
-            adm.setNome(sc.next());
-            adm.setId(1);
+            getAdm().setNome(sc.next());
+            getAdm().setId(1);
             System.out.println("Digite o email do ADM");
-            adm.setEmail(sc.next());
+            getAdm().setEmail(sc.next());
         }
 
         for (int i = 0; i < 2; i++) {
             a = new Aluno();
-            cadAlunoGeral(getAlunosGeral(),a = criarAluno(getQtalunos()));
+            cadAlunoGeral();
             participantes.add(a);
             e.setVagas(e.getVagas()-1);
             e.setParticipantes(participantes);
@@ -94,14 +70,19 @@ public class Dados {
         
         e.setDescicao(descicao);
         e.setId(id);
-        e.setAdm(adm);
+        e.setAdm(getAdm());
         e.setTipoEvento(tipoEvento);
-        eventos.add(e);
 
-        setEventos(eventos);
+        return e;
     }
 
-    public Aluno criarAluno(int qtalunos){
+    @Override
+    public void cadEvento(){
+        getEventos().add(criarEvento());
+    }
+
+    @Override
+    public Aluno criarAluno(){
         Aluno a = new Aluno();
         Scanner sc = new Scanner(System.in);
 
@@ -117,29 +98,24 @@ public class Dados {
         return a;
     }
 
-    public void cadAlunoGeral(Set<Aluno> alunos, Aluno a){alunos.add(a);}
+    @Override
+    public void cadAlunoGeral(){
+        Aluno al = criarAluno();
+        getAlunosGeral().add(al);
+        al.setMatriculado(true);
+    }
 
-
-    public void cadAlunoEvento(int id,Set<Aluno> alunos, int idEvento, Set<Evento> eventos){
-       
-        for (Aluno a:alunos){
-            if (a.getId() == id) {
-                for (Evento e:eventos){
-                    if (e.getId() == id && e.getParticipantes().size() < 10) {
+    @Override
+    public void cadAlunoEvento(int idAluno, int idEvento){
+        for (Aluno a:getAlunosGeral()){
+            if (a.getId() == idAluno) {
+                for (Evento e:getEventos()){
+                    if (e.getId() == idEvento && e.getParticipantes().size() < 10) {
                         e.getParticipantes().add(a);
+                        e.setVagas(e.getVagas()-1);
                     }    
                 }
             }
-        }
-    }
-
-    public void obterIdADM(Administrador a){
-       System.out.println(a.getId());
-    }
-
-    public void obterAlunos(Set<Aluno> alunos){
-        for (Aluno a:alunos){
-            System.out.println(a);
         }
     }
 

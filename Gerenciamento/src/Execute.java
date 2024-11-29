@@ -4,35 +4,52 @@ public class Execute {
     public static void main(String[] args) {
 
         Scanner sc = new Scanner(System.in);
-        int esc=0;
+        int esc;
         Dados d = new Dados();
     
-        while (esc != 5) {
+        do  {
             System.out.println("1-Cadastrar evento");
             System.out.println("2-Cadastramento Geral Aluno");
             System.out.println("3-Cadastrar Aluno em Evento");
             esc = sc.nextInt();
             switch (esc) {
                 case 1:
-                    d.criarEvento(d.getEventos(),d.getAdm(),d.getQtalunos());
+                    d.criarEvento();
                     break;
                 case 2:
-                    d.cadAlunoGeral(d.getAlunosGeral(),d.criarAluno(d.getQtalunos()));
+                    while (d.getAlunosGeral().size() < 8) {
+                        d.criarAluno();
+                    }
                     break;
                 case 3:
-                    d.cadAlunoEvento(sc.nextInt(),d.getAlunosGeral(),sc.nextInt(),d.getEventos());
+                    System.out.println("Digite o ID do aluno:");
+                    int idA = sc.nextInt();
+                    System.out.println("Digite o ID do Evento:");
+                    int idE = sc.nextInt();
+                    d.cadAlunoEvento(idA,idE);
                     break;
                 case 4:
-                    for(Aluno a: d.getAlunosGeral()){
-                        System.out.println(a);
-                    }
-                    for(Evento e :d.getEventos()){
-                        System.out.println(e);
-                    }
+                    System.out.println("Alunos cadastrados:");
+                    d.obterAlunos();
+                    System.out.println("Eventos cadastrados:");
+                    d.obterEventos();
                     break;
+                case 5:
+                    System.out.println("ID do aluno que quer excluir:");
+                    int i = sc.nextInt();
+                    d.excAlunoGeral(i);
+                    break;
+                case 6:
+                    System.out.println("ID do aluno:");
+                    int ida = sc.nextInt();
+                    System.out.println("ID do evento:");
+                    int ide = sc.nextInt();
+                    d.excAlunoEvento(ida, ide);
                 default:
                     break;
             }
-        }
+        }while (esc != 5);
+            
+        
     }
 }
