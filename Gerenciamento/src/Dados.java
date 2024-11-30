@@ -3,10 +3,14 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
-public class Dados extends ADados{
+import Erros.AlunoNaoCadastrado;
+import Erros.EventoNaoEcontrado;
+import Erros.EventoSemVagas;
+
+public class Dados extends ADados {
 
     @Override
-    public Evento criarEvento(){
+    public Evento criarEvento() {
         Scanner sc = new Scanner(System.in);
         String descicao;
         LocalDate data;
@@ -18,7 +22,7 @@ public class Dados extends ADados{
 
         System.out.println("Digite a descição do Evento: ");
         descicao = sc.nextLine();
-        id = getQtEventos()+1;
+        id = getQtEventos() + 1;
         data = gerarData(sc);
         System.out.println("Tipo do evento: 1-Palestra 2-Workshop 3-Seminário 4-Minicurso 5-Competição");
         opc = sc.nextInt();
@@ -30,7 +34,7 @@ public class Dados extends ADados{
                 tipoEvento = Tipo.WORKSHOPS;
                 break;
             case 3:
-                tipoEvento = Tipo.SEMINARIO;  
+                tipoEvento = Tipo.SEMINARIO;
                 break;
             case 4:
                 tipoEvento = Tipo.MINICURSO;
@@ -42,7 +46,7 @@ public class Dados extends ADados{
                 System.out.println("Tipo de não existente !");
                 break;
         }
-        
+
         if (getAdm().getId() != 1) {
             System.out.println("Digite o nome do ADM: ");
             getAdm().setNome(sc.next());
@@ -53,12 +57,13 @@ public class Dados extends ADados{
 
         for (int i = 0; i < 2; i++) {
             a = criarAluno();
+            a.setMatriculado(true);
             cadAlunoGeral(a);
             inscritos.add(a);
             e.setParticipantes(inscritos);
-            e.setVagas(e.getVagas()-1);
+            e.setVagas(e.getVagas() - 1);
         }
-        
+
         e.setDescicao(descicao);
         e.setId(id);
         e.setData(data);
@@ -70,16 +75,16 @@ public class Dados extends ADados{
     }
 
     @Override
-    public void cadEvento(Evento e){
+    public void cadEvento(Evento e) {
         getEventos().add(e);
     }
 
     @Override
-    public Aluno criarAluno(){
+    public Aluno criarAluno() {
         Aluno a = new Aluno();
         Scanner sc = new Scanner(System.in);
 
-        a.setId(getQtalunos()+1);
+        a.setId(getQtalunos() + 1);
         System.out.println("Digite o nome do aluno: ");
         a.setNome(sc.nextLine());
         System.out.println("Digite a matricula do aluno: ");
@@ -87,60 +92,112 @@ public class Dados extends ADados{
         System.out.println("Digite a turma do aluno: ");
         a.setTurma(sc.nextLine());
         a.setMatriculado(false);
-        setQtalunos(getQtalunos()+1);
+        setQtalunos(getQtalunos() + 1);
 
         return a;
     }
 
     @Override
-    public void cadAlunoGeral(Aluno a){
-        Set <Aluno> al = new HashSet<Aluno>();
+    public void cadAlunoGeral(Aluno a) {
+        Set<Aluno> al = new HashSet<Aluno>();
         al = getAlunosGeral();
         al.add(a);
         setAlunosGeral(al);
     }
 
     @Override
-    public void cadAlunoEvento(int idAluno, int idEvento){
-        for (Aluno a:getAlunosGeral()){
-            if (a.getId() == idAluno) {
-                for (Evento e:getEventos()){
-                    if (e.getId() == idEvento && e.getParticipantes().size() < 10) {
-                        e.getParticipantes().add(a);
-                        e.setVagas(e.getVagas()-1);
-                        a.setMatriculado(true);
-                    }    
-                }
-            }
-        }
-    }
-
-    @Override
-    public  void excAlunoGeral(int id){
-        Set<Aluno> al = new HashSet<Aluno>();
-        for(Aluno a : getAlunosGeral()){
-            if (a.getId() == id && !a.getMatriculado()) {
-                al = getAlunosGeral();
-                al.remove(a);
-                setAlunosGeral(al);
-            }
-        }
-    }
-
-    @Override
-    public  void excAlunoEvento(int idA, int idE){
-        Set<Aluno> al = new HashSet<Aluno>();
-        for(Evento e : getEventos()){
-            if (e.getId() == idE) {
-                for(Aluno a : e.getParticipantes()){
-                    if (a.getId() == idA) {
-                        al = e.getParticipantes();
-                        al.remove(a);
-                        e.setParticipantes(al);
+    public void cadAlunoEvento(int idAluno, int idEvento) {
+        try {
+            if (!validarId(getEventos(), idEvento)) {
+                throw new EventoNaoEcontrado();
+            } else if (!validarId(idEvento, getAlunosGeral())) {
+                throw new AlunoNaoCadastrado();
+            } else {
+                for (Aluno a : getAlunosGeral()) {
+                    if (a.getId() == idAluno) {
+                        for (Evento e : getEventos()) {
+                            if (e.getId() == idEvento) {
+                                if (e.getParticipantes().size() < 10) {
+                                    e.getParticipantes().add(a);
+                                    e.setVagas(e.getVagas() - 1);
+                                    a.setMatriculado(true);
+                                } else {
+                                    throw new EventoSemVagas();
+                                }
+                            }
+                        }
                     }
                 }
             }
+        } catch (EventoNaoEcontrado | AlunoNaoCadastrado | EventoSemVagas err) {
+            System.out.println(err);
         }
+    }
+
+    @Override
+    public void excAlunoGeral(int id) {
+        try {
+            if (!validarId(id, getAlunosGeral())) {
+                throw new AlunoNaoCadastrado();
+            }
+            Set<Aluno> al = new HashSet<Aluno>();
+            for (Aluno a : getAlunosGeral()) {
+                if (a.getId() == id) {
+                    if (!a.getMatriculado()) {
+                        al = getAlunosGeral();
+                        al.remove(a);
+                        setAlunosGeral(al);
+                    } else {
+                        System.out.println("Operação negada! Aluno cadastrado em algum evento..");
+                    }
+                }
+            }
+        } catch (AlunoNaoCadastrado err) {
+            System.out.println(err);
+        }
+
+    }
+
+    @Override
+    public void excAlunoEvento(int idA, int idE) {
+        try {
+            if (!validarId(getEventos(), idE)) {
+                throw new EventoNaoEcontrado();
+            } else if (!validarId(idE, getAlunosGeral())) {
+                throw new AlunoNaoCadastrado();
+            } else {
+                Set<Aluno> al;
+                for (Evento e : getEventos()) {
+                    if (e.getId() == idE) {
+                        if (e.getParticipantes().size() > 2) {
+                            for (Aluno a : e.getParticipantes()) {
+                                if (a.getId() == idA) {
+
+                                    al = new HashSet<Aluno>();
+                                    al = e.getParticipantes();
+                                    al.remove(a);
+                                    e.setVagas(e.getVagas() + 1);
+                                    e.setParticipantes(al);
+
+                                    al = getAlunosGeral();
+                                    al.remove(a);
+                                    a.setMatriculado(false);
+                                    al.add(a);
+                                    setAlunosGeral(al);
+                                }
+                            }
+                        } else {
+                            System.out.println("Operação negada ! Evento com a capacidade mímima de 2 ");
+                        }
+
+                    }
+                }
+            }
+
+        } catch (EventoNaoEcontrado | AlunoNaoCadastrado err) {
+            System.out.println(err);
+        }
+
     }
 
 }

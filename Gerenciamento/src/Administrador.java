@@ -1,4 +1,4 @@
-public class Administrador extends Pessoa{
+public class Administrador extends Pessoa {
     private String email;
 
     public String getEmail() {
@@ -14,6 +14,4 @@ public class Administrador extends Pessoa{
         return "Administrador [email=" + email + ", Nome=" + getNome() + ", Id=" + getId() + "]";
     }
 
-    
-    
 }

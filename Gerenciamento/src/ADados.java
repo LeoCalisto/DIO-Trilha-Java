@@ -49,8 +49,8 @@ public abstract class ADados {
         this.eventos = eventos;
     }
 
-    public LocalDate gerarData(Scanner sc){
-        int a,m,day;
+    public LocalDate gerarData(Scanner sc) {
+        int a, m, day;
         System.out.println("Insira o ano do evento yyyy: ");
         a = sc.nextInt();
         System.out.println("Insira o mês do evento mm: ");
@@ -62,23 +62,47 @@ public abstract class ADados {
     }
 
     public abstract void cadAlunoGeral(Aluno a);
+
     public abstract Evento criarEvento();
+
     public abstract Aluno criarAluno();
+
     public abstract void cadEvento(Evento e);
+
     public abstract void cadAlunoEvento(int idAluno, int idEvento);
+
     public abstract void excAlunoGeral(int id);
+
     public abstract void excAlunoEvento(int idA, int idE);
 
-    public void obterEventos(){
+    public void obterEventos() {
         for (Evento e : eventos) {
             System.out.println(e);
         }
     }
 
-    public void obterAluno(){
+    public void obterAluno() {
         for (Aluno a : alunos) {
             System.out.println(a);
         }
+    }
+
+    public boolean validarId(int n, Set<Aluno> alunos) {
+        for (Aluno a : alunos) {
+            if (a.getId() == n) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean validarId(Set<Evento> eventos, int n) {
+        for (Evento e : eventos) {
+            if (e.getId() == n) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
