@@ -1,14 +1,16 @@
+import java.time.LocalDate;
 import java.util.Set;
 
-public class Evento {
+public class Evento implements Comparable<Evento>{
     private String descicao;
     private int id;
     private Tipo tipoEvento;
+    private LocalDate data;
     private Administrador adm;
     private Set<Aluno> participantes;
     private int vagas = 10;
 
-
+    
     public String getDescicao() {
         return descicao;
     }
@@ -23,6 +25,14 @@ public class Evento {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public LocalDate getData() {
+        return data;
+    }
+
+    public void setData(LocalDate data) {
+        this.data = data;
     }
 
     public Tipo getTipoEvento() {
@@ -59,8 +69,19 @@ public class Evento {
 
     @Override
     public String toString() {
-        return "Evento [descicao=" + descicao + ", id=" + id + ", tipoEvento=" + tipoEvento + ", adm=" + adm
-                + ", participantes=" + participantes + ", vagas=" + vagas + "]";
+        return "Evento [descicao=" + descicao + ", id=" + id + ", tipoEvento=" + tipoEvento + ", data=" + data
+                + ", adm=" + adm + ", participantes=" + participantes + ", vagas=" + vagas + "]";
+    }
+
+    @Override
+    public int compareTo(Evento o) {
+        if (this.participantes.size() > o.getParticipantes().size()) {
+            return -1;
+        }else if( this.participantes.size() < o.getParticipantes().size()){
+            return 1;
+        }else{
+            return 0;
+        }
     }
 
 }

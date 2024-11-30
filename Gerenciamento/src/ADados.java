@@ -1,4 +1,6 @@
+import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.Scanner;
 import java.util.Set;
 
 public abstract class ADados {
@@ -47,34 +49,24 @@ public abstract class ADados {
         this.eventos = eventos;
     }
 
+    public static LocalDate gerarData(Scanner sc){
+        int a,m,day;
+        System.out.println("Insira o ano do evento yyyy: ");
+        a = sc.nextInt();
+        System.out.println("Insira o mês do evento mm: ");
+        m = sc.nextInt();
+        System.out.println("Insira o dia do evento dd :");
+        day = sc.nextInt();
+        LocalDate data = LocalDate.of(a, m, day);
+        return data;
+    }
+
     public abstract void cadAlunoGeral();
-
     public abstract Evento criarEvento();
-    
-    public abstract void cadEvento();
-
     public abstract Aluno criarAluno();
-
+    public abstract void cadEvento();
     public abstract void cadAlunoEvento(int idAluno, int idEvento);
-
-    public  void excAlunoGeral(int id){
-        for(Aluno a : getAlunosGeral()){
-            if (a.getId() == id && a.getMatriculado() == false) {
-                getAlunosGeral().remove(a);
-            }
-        }
-    }
-
-    public  void excAlunoEvento(int idA, int idE){
-        for(Evento e : getEventos()){
-            if (e.getId() == idE) {
-                for(Aluno a : e.getParticipantes()){
-                    if (a.getId() == idA) {
-                        e.getParticipantes().remove(a);
-                    }
-                }
-            }
-        }
-    }
+    public abstract void excAluno(int id);
+    public abstract void excAluno(int idA, int idE);
 
 }

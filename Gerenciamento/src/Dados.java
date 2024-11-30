@@ -1,25 +1,15 @@
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.Set;
 
 public class Dados extends ADados{
 
-    public void obterAlunos(){
-        for (Aluno a:getAlunosGeral()){
-            System.out.println(a);
-        }
-    }
-
-    public void obterEventos(){
-        for (Evento e:getEventos()){
-            System.out.println(e);
-        }
-    }
-
     @Override
     public Evento criarEvento(){
         Scanner sc = new Scanner(System.in);
         String descicao;
+        LocalDate data;
         int id, opc;
         Tipo tipoEvento = null;
         Evento e = new Evento();
@@ -29,6 +19,8 @@ public class Dados extends ADados{
         System.out.println("Digite a descição do Evento: ");
         descicao = sc.nextLine();
         id = getQtEventos()+1;
+        System.out.println("digite a data do evento()");
+        data = LocalDate.of(sc.nextInt(), sc.nextInt(), sc.nextInt());
         System.out.println("Tipo do evento: 1-Palestra 2-Workshop 3-Seminário 4-Minicurso 5-Competição");
         opc = sc.nextInt();
         switch (opc) {
@@ -63,9 +55,9 @@ public class Dados extends ADados{
         for (int i = 0; i < 2; i++) {
             a = new Aluno();
             cadAlunoGeral();
-            participantes.add(a);
+            e.getParticipantes().add(a);
             e.setVagas(e.getVagas()-1);
-            e.setParticipantes(participantes);
+            e.setParticipantes(e.getParticipantes());
         }
         
         e.setDescicao(descicao);
@@ -114,6 +106,28 @@ public class Dados extends ADados{
                         e.getParticipantes().add(a);
                         e.setVagas(e.getVagas()-1);
                     }    
+                }
+            }
+        }
+    }
+
+    @Override
+    public  void excAluno(int id){
+        for(Aluno a : getAlunosGeral()){
+            if (a.getId() == id && a.getMatriculado() == false) {
+                getAlunosGeral().remove(a);
+            }
+        }
+    }
+
+    @Override
+    public  void excAluno(int idA, int idE){
+        for(Evento e : getEventos()){
+            if (e.getId() == idE) {
+                for(Aluno a : e.getParticipantes()){
+                    if (a.getId() == idA) {
+                        e.getParticipantes().remove(a);
+                    }
                 }
             }
         }
