@@ -37,7 +37,7 @@ public abstract class ADados {
         return alunos;
     }
 
-    public void setAlunos(Set<Aluno> alunos) {
+    public void setAlunosGeral(Set<Aluno> alunos) {
         this.alunos = alunos;
     }
 
@@ -49,7 +49,7 @@ public abstract class ADados {
         this.eventos = eventos;
     }
 
-    public static LocalDate gerarData(Scanner sc){
+    public LocalDate gerarData(Scanner sc){
         int a,m,day;
         System.out.println("Insira o ano do evento yyyy: ");
         a = sc.nextInt();
@@ -61,12 +61,24 @@ public abstract class ADados {
         return data;
     }
 
-    public abstract void cadAlunoGeral();
+    public abstract void cadAlunoGeral(Aluno a);
     public abstract Evento criarEvento();
     public abstract Aluno criarAluno();
-    public abstract void cadEvento();
+    public abstract void cadEvento(Evento e);
     public abstract void cadAlunoEvento(int idAluno, int idEvento);
-    public abstract void excAluno(int id);
-    public abstract void excAluno(int idA, int idE);
+    public abstract void excAlunoGeral(int id);
+    public abstract void excAlunoEvento(int idA, int idE);
+
+    public void obterEventos(){
+        for (Evento e : eventos) {
+            System.out.println(e);
+        }
+    }
+
+    public void obterAluno(){
+        for (Aluno a : alunos) {
+            System.out.println(a);
+        }
+    }
 
 }

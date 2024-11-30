@@ -24,10 +24,8 @@ public class Aluno extends Pessoa{
     
     @Override
     public String toString() {
-        return "Aluno [turma=" + turma + ", matricula=" + matricula + ", Nome=" + getNome() + ", Id="
-                + getId() + "]";
+        return "Aluno [turma=" + turma + ", matricula=" + matricula + ", matriculado=" + matriculado + "]";
     }
-    
     
     
 }

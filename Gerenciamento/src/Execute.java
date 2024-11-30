@@ -1,4 +1,3 @@
-import java.time.LocalDate;
 import java.util.Scanner;
 
 public class Execute {
@@ -10,19 +9,14 @@ public class Execute {
         int esc;
     
         do  {
-            System.out.println("1-Cadastrar evento");
-            System.out.println("2-Cadastramento Geral Aluno");
-            System.out.println("3-Cadastrar Aluno em Evento");
+            mostrarMenu();
             esc = sc.nextInt();
             switch (esc) {
                 case 1:
-                    d.criarEvento();
-                    d.cadEvento();
+                    d.cadEvento(d.criarEvento());
                     break;
                 case 2:
-                    while (d.getAlunosGeral().size() < 8) {
-                        d.criarAluno();
-                    }
+                    d.cadAlunoGeral(d.criarAluno());
                     break;
                 case 3:
                     System.out.println("Digite o ID do aluno:");
@@ -33,12 +27,12 @@ public class Execute {
                     break;
                 case 4:
                     System.out.println("Alunos cadastrados:");
-                    d.getEventos();
+                    d.obterAluno();
                     System.out.println("Eventos cadastrados:");
-                    d.getAlunosGeral();
+                    d.obterEventos();;
                     break;
                 case 5:
-                    d.getAdm();
+                    System.out.println(d.getAdm()); 
                     break;
                 case 6:
                     i.imprimir(d.getEventos());
@@ -50,22 +44,52 @@ public class Execute {
                     i.imprimirTipo(d.getEventos());
                     break;
                 case 9:
-                    i.imprimir(gerarData(sc), gerarData(sc), d.getEventos());
+                    i.imprimir(d.gerarData(sc), d.gerarData(sc), d.getEventos());
+                    break;
                 case 10:
+                    System.out.println("informe o ID do aluno: ");
+                    int id = sc.nextInt();
+                    i.imprimir(d.getEventos(), id,d.getAlunosGeral());
+                    break;
+                case 11:
+                    int idaluno, idevento;
+                    System.out.println("informe o ID do aluno: ");
+                    idaluno = sc.nextInt();
+                    idevento = sc.nextInt();
+                    i.imprimir(d.getEventos(), idaluno, idevento);
+                    break;
+                case 12:
                     System.out.println("ID do aluno que quer excluir:");
                     int x = sc.nextInt();
                     d.excAlunoGeral(x);
                     break;
-                case 11:
+                case 13:
                     System.out.println("ID do aluno:");
                     int ida = sc.nextInt();
                     System.out.println("ID do evento:");
                     int ide = sc.nextInt();
                     d.excAlunoEvento(ida, ide);
+                    break;
                 default:
                     break;
             }
         }while (esc != 0);
     }
 
+    public static void mostrarMenu(){
+        System.out.println("1-Cadastrar evento");
+        System.out.println("2-Cadastramento Geral Aluno");
+        System.out.println("3-Cadastrar Aluno em Evento");
+        System.out.println("4-Mostrar alunos e eventos");
+        System.out.println("5-Identificação do ADM");
+        System.out.println("6-Lista de estudantes por evento");
+        System.out.println("7-Lista dos evento pelo decrescente de inscritos");
+        System.out.println("8-Liste de eventos pelo tipo do evento");
+        System.out.println("9-Lista de eventos baseado em um periodo");
+        System.out.println("10-Lista de eventos de um aluno especifico");
+        System.out.println("11-Saber se o aluno está inscrito em evento especifico");
+        System.out.println("12-Excluir estudante da lista geral");
+        System.out.println("13-Excluir estudante de um evento");
+        
+    }
 }

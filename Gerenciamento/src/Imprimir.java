@@ -76,6 +76,7 @@ public class Imprimir implements IImprimir{
             for (Aluno a : e.getParticipantes()) {
                 if (a.getId() == idA ) {
                     System.out.println(e);
+                    i=true;
                 }
             }
         }
